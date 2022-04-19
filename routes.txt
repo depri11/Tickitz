@@ -1,0 +1,19 @@
+- get one data
+GET
+/api/v1/movies/:id
+
+- get all data
+GET
+/api/v1/movies
+
+- create movies
+POST
+/api/v1/movies
+
+- update movie
+PUT
+/api/v1/movies/:id
+
+- delete movie
+DELETE
+/api/v1/movies/:id

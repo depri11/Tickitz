@@ -1,0 +1,38 @@
+- movie
+* id : int
+* title : varchar
+* description : varchar
+* release_date : varchar
+* directed_by : varchar
+* duration : varchar
+* casts : varchar
+* images : varchar
+* created_at : dateTime
+* updated_at : dateTime
+
+- booking
+* id : int
+* movie_id : int
+* seat : varchar
+* total_payment
+* created_at : dateTime
+* updated_at : dateTime
+
+- schedule
+* id : int
+* movie_id : int
+* location : varchar
+* date_start : varchar
+* date_end : varchar
+* time : varchar
+* created_at : dateTime
+* updated_at : dateTime
+
+- premiere
+* id : int
+* schedule_id : int
+* name : varchar
+* price : int
+* image_url : varchar
+* created_at : dateTime
+* updated_at : dateTime
