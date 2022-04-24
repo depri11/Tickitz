@@ -4,20 +4,20 @@ const models = {};
 // Get Models All Data Movie
 models.getAll = function ({ page, sort }) {
   return new Promise(function (resolve, reject) {
-    if (sort === "title") {
-      db.query(`SELECT * FROM movie ORDER BY title LIMIT 5 OFFSET (($1-1) * 5)`, [page])
+    if (sort === "tittle") {
+      db.query(`SELECT * FROM movie ORDER BY title asc LIMIT 5 OFFSET (($1-1) * 5)`, [page])
         .then((data) => {
           resolve(data.rows);
         })
         .catch((err) => reject(err));
     } else if (sort === "date") {
-      db.query(`SELECT * FROM movie ORDER BY release_date LIMIT 5 OFFSET (($1-1) * 5)`, [page])
+      db.query(`SELECT * FROM movie ORDER BY release_date desc LIMIT 5 OFFSET (($1-1) * 5)`, [page])
         .then((data) => {
           resolve(data.rows);
         })
         .catch((err) => reject(err));
     } else {
-      db.query(`SELECT * FROM movie ORDER BY id LIMIT 5 OFFSET (($1-1) * 5)`, [page])
+      db.query(`SELECT * FROM movie ORDER BY id desc LIMIT 5 OFFSET (($1-1) * 5)`, [page])
         .then((data) => {
           resolve(data.rows);
         })

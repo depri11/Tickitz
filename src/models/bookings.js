@@ -11,9 +11,9 @@ models.getAll = function () {
   });
 };
 
-models.addData = function ({ date_time, seat, movie_id, total_payment }) {
+models.addData = function ({ date_time, seat, movie_id, total_payment, cinema_name, ticket }) {
   return new Promise(function (resolve, reject) {
-    db.query(`INSERT INTO booking (date_time, seat, movie_id, total_payment) VALUES ($1, $2, $3, $4) returning *`, [date_time, seat, movie_id, total_payment])
+    db.query(`INSERT INTO booking (date_time, seat, movie_id, total_payment, cinema_name, ticket) VALUES ($1, $2, $3, $4, $5, $6) returning *`, [date_time, seat, movie_id, total_payment, cinema_name, ticket])
       .then((data) => {
         resolve(data.rows);
       })
@@ -31,9 +31,9 @@ models.getData = function ({ id }) {
   });
 };
 
-models.updateData = function ({ id, premier_id, date_time, seat, total_payment, movie_id }) {
+models.updateData = function ({ id, date_time, seat, movie_id, total_payment, cinema_name, ticket }) {
   return new Promise(function (resolve, reject) {
-    db.query(`UPDATE booking SET premier_id=$1, date_time=$2, seat=$3, total_payment=$4, movie_id=$5, updated_at=now() WHERE id = $6 returning *`, [premier_id, date_time, seat, total_payment, movie_id, id])
+    db.query(`UPDATE booking SET date_time=$1, seat=$2, movie_id=$3, total_payment=$4, cinema_name=$5, ticket=$6, updated_at=now() WHERE id = ${id} returning *`, [date_time, seat, movie_id, total_payment, cinema_name, ticket])
       .then((data) => {
         resolve(data.rows);
       })

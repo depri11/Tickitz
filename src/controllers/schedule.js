@@ -30,8 +30,8 @@ schedule.getData = async (req, res) => {
 // Create Schedule
 schedule.createData = async (req, res) => {
   try {
-    const { booking_id, date_start, date_end, time } = req.body;
-    const data = await models.addData({ booking_id, date_start, date_end, time });
+    const { booking_id, movie_id } = req.body;
+    const data = await models.addData({ booking_id, movie_id });
     return response(res, 200, data);
   } catch (error) {
     return response(res, 500, error);
@@ -58,8 +58,8 @@ schedule.deleteData = async (req, res) => {
 schedule.updateData = async (req, res) => {
   try {
     const { id } = req.params;
-    const { booking_id, date_start, date_end, time } = req.body;
-    const data = await models.updateData({ booking_id, date_start, date_end, time, id });
+    const { booking_id, movie_id } = req.body;
+    const data = await models.updateData({ id, booking_id, movie_id });
     if (!data.length) {
       return response(res, 404, "Data tidak ditemukan");
     } else {

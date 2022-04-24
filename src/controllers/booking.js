@@ -13,8 +13,8 @@ bookings.getAll = async (req, res) => {
 
 bookings.createData = async (req, res) => {
   try {
-    const { date_time, seat, movie_id, total_payment } = req.body;
-    const data = await models.addData({ date_time, seat, movie_id, total_payment });
+    const { date_time, seat, movie_id, total_payment, cinema_name, ticket } = req.body;
+    const data = await models.addData({ date_time, seat, movie_id, total_payment, cinema_name, ticket });
     return response(res, 201, data);
   } catch (error) {
     return response(res, 500, error);
@@ -38,8 +38,8 @@ bookings.getData = async (req, res) => {
 bookings.updateData = async (req, res) => {
   try {
     const { id } = req.params;
-    const { premier_id, date_time, seat, total_payment, movie_id } = req.body;
-    const data = await models.updateData({ id, premier_id, date_time, seat, total_payment, movie_id });
+    const { date_time, seat, movie_id, total_payment, cinema_name, ticket } = req.body;
+    const data = await models.updateData({ id, date_time, seat, movie_id, total_payment, cinema_name, ticket });
     if (!data.length) {
       return response(res, 404, "Data tidak ditemukan");
     } else {

@@ -21,9 +21,9 @@ models.getData = function ({ id }) {
   });
 };
 
-models.addData = function ({ booking_id, date_start, date_end, time }) {
+models.addData = function ({ booking_id, movie_id }) {
   return new Promise(function (resolve, reject) {
-    db.query(`INSERT INTO schedule (booking_id, date_start, date_end, time) VALUES($1, $2, $3, $4) returning *`, [booking_id, date_start, date_end, time])
+    db.query(`INSERT INTO schedule (booking_id, movie_id) VALUES($1, $2) returning *`, [booking_id, movie_id])
       .then((data) => {
         resolve(data.rows);
       })
@@ -43,9 +43,9 @@ models.deleteData = function ({ id }) {
   });
 };
 
-models.updateData = function ({ booking_id, date_start, date_end, time, id }) {
+models.updateData = function ({ id, booking_id, movie_id }) {
   return new Promise(function (resolve, reject) {
-    db.query(`UPDATE schedule SET booking_id=$1, date_start=$2, date_end=$3, time=$4, updated_at=now() WHERE id=${id} returning *`, [booking_id, date_start, date_end, time])
+    db.query(`UPDATE schedule SET booking_id=$1, movie_id=$2 WHERE id = ${id} returning *`, [booking_id, movie_id])
       .then((data) => {
         resolve(data.rows);
       })
