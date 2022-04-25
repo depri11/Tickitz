@@ -43,7 +43,7 @@ movies.createData = async (req, res) => {
     }
 }
 
-// Update a Movie (BELUM FIX)
+// Update a Movie
 movies.updateData = async (req, res) => {
     try {
         const { id } = req.params
