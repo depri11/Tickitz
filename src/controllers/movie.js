@@ -2,16 +2,25 @@ const models = require('../models/movies')
 const response = require('../helpers/response')
 const movies = {}
 
+movies.getData = async (req, res) => {
+    try {
+        const data = await models.getMovie()
+        return response(res, 200, data)
+    } catch (error) {
+        return response(res, 500, error)
+    }
+}
+
 // Get all Movies
 movies.getAll = async (req, res) => {
     try {
-        const { page, sort } = req.query
-        const data = await models.getAll({ page, sort })
-        if (!data.length) {
-            return response(res, 404, 'Data tidak ditemukan')
-        } else {
-            return response(res, 200, data)
+        const query = {
+            page: req.query.page || 1,
+            limit: req.query.limit || 5,
+            order: req.query.order,
         }
+        const { data, meta } = await models.getAll(query)
+        return response(res, 200, data, meta)
     } catch (error) {
         return response(res, 500, error)
     }

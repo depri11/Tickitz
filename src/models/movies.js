@@ -1,29 +1,45 @@
 const db = require('../configs/db')
+const format = require('pg-format')
 const models = {}
 
-// Get Models All Data Movie
-models.getAll = function ({ page, sort }) {
+models.getMovie = async (req, res) => {
     return new Promise(function (resolve, reject) {
-        if (sort === 'tittle') {
-            db.query('SELECT * FROM movie ORDER BY title asc LIMIT 5 OFFSET (($1-1) * 5)', [page])
-                .then((data) => {
-                    resolve(data.rows)
-                })
-                .catch((err) => reject(err))
-        } else if (sort === 'date') {
-            db.query('SELECT * FROM movie ORDER BY release_date desc LIMIT 5 OFFSET (($1-1) * 5)', [page])
-                .then((data) => {
-                    resolve(data.rows)
-                })
-                .catch((err) => reject(err))
-        } else {
-            db.query('SELECT * FROM movie ORDER BY id desc LIMIT 5 OFFSET (($1-1) * 5)', [page])
-                .then((data) => {
-                    resolve(data.rows)
-                })
-                .catch((err) => reject(err))
-        }
+        db.query('SELECT * FROM movie')
+            .then((data) => {
+                resolve(data.rows)
+            })
+            .catch((err) => reject(err))
     })
+}
+
+// Get Models All Data Movie
+models.getAll = async ({ page, limit, order }) => {
+    try {
+        let query = format('SELECT * FROM movie')
+
+        if (order) {
+            query = format(query + ' ORDER BY id %s', order)
+        }
+
+        if (page && limit) {
+            const offset = (page - 1) * limit
+            query = format(query + ' LIMIT %s OFFSET %s', limit, offset)
+        }
+
+        const { rows } = await db.query('SELECT COUNT(id) as "count" FROM public.movie')
+        const counts = rows[0].count
+
+        const meta = {
+            next: page == Math.ceil(counts / limit) ? null : `/api/v1/movies/all?order=${order}&page=${Number(page) + 1}&limit=${limit}`,
+            prev: page == 1 ? null : `/api/v1/movies/all?order=${order}&page=${Number(page) - 1}&limit=${limit}`,
+            counts,
+        }
+
+        const prods = await db.query(query)
+        return { data: prods.rows, meta }
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 // Get Models A Data Movie
