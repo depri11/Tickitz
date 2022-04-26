@@ -12,8 +12,8 @@ const validateToken = (req, res, next) => {
         if (err) {
             return respone(res, 401, err)
         }
+        req.user = decode
 
-        req.users = decode
         next()
     })
 }

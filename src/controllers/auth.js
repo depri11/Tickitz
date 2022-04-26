@@ -3,10 +3,10 @@ const response = require('../helpers/response')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-function genToken(email) {
+function genToken(email, role) {
     const payload = {
         email: email,
-        role: 'admin',
+        role: role,
     }
 
     const token = jwt.sign(payload, process.env.JWT_KEYS, { expiresIn: 3600 })
@@ -26,9 +26,9 @@ async function Login(req, res) {
 
         const password_user = req.body.password
         const check = await bcrypt.compare(password_user, password_db[0].password)
-
+        const role = password_db[0].role
         if (check) {
-            const token = genToken(req.body.email)
+            const token = genToken(req.body.email, role)
             return response(res, 200, token)
         } else {
             return response(res, 401, 'Password anda salah')

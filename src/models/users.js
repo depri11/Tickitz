@@ -1,3 +1,4 @@
+const { user } = require('pg/lib/defaults')
 const db = require('../configs/db')
 const models = {}
 
@@ -24,14 +25,14 @@ models.getByEmail = function (email) {
     })
 }
 
-models.addData = function ({ first_name, last_name, phone_number, email, hashPassword }) {
+models.addData = function ({ first_name, last_name, phone_number, email, hashPassword, profile_image }) {
     return new Promise((resolve, reject) => {
-        db.query('INSERT INTO public.users (first_name, last_name, phone_number, email, "password") VALUES($1, $2, $3, $4, $5)', [first_name, last_name, phone_number, email, hashPassword])
+        db.query(`INSERT INTO public.users (first_name, last_name, phone_number, email, "password", profile_image, role) VALUES($1, $2, $3, $4, $5, $6, 'user')`, [first_name, last_name, phone_number, email, hashPassword, profile_image])
             .then(() => {
                 resolve('Data berhasil disimpan')
             })
             .catch((ers) => {
-                reject(ers)
+                reject(ers.message)
             })
     })
 }

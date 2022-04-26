@@ -21,9 +21,9 @@ models.addData = function ({ date_time, seat, movie_id, total_payment, cinema_na
     })
 }
 
-models.getData = function ({ id }) {
+models.getData = function ({ booking_id }) {
     return new Promise(function (resolve, reject) {
-        db.query(`SELECT * FROM booking WHERE id = ${id}`)
+        db.query(`SELECT * FROM public.booking join public.movie using(movie_id) where booking_id = ${booking_id}`)
             .then((data) => {
                 resolve(data.rows)
             })

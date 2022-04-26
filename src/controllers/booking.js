@@ -23,8 +23,8 @@ bookings.createData = async (req, res) => {
 
 bookings.getData = async (req, res) => {
     try {
-        const { id } = req.params
-        const data = await models.getData({ id })
+        const { id: booking_id } = req.params
+        const data = await models.getData({ booking_id })
         if (!data.length) {
             return response(res, 404, 'Data tidak ditemukan')
         } else {
