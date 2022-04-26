@@ -77,7 +77,7 @@ models.addData = function ({ title, description, release_date, directed_by, dura
 // Update Models Data
 models.updateData = function ({ id, title, description, release_date, directed_by, duration, casts, images, category, price }) {
     return new Promise(function (resolve, reject) {
-        db.query(`UPDATE movie SET title=$1, description=$2, release_date=$3, directed_by=$4, duration=$5, casts=$6, images=$7, category=$8, price=$9, updated_at=now() WHERE id = ${id} returning *`, [
+        db.query(`UPDATE public.movie SET title=$1, description=$2, release_date=$3, directed_by=$4, duration=$5, casts=$6, images=$7, category=$8, price=$9, updated_at=now() WHERE movie_id=${id} returning *`, [
             title,
             description,
             release_date,
@@ -91,14 +91,14 @@ models.updateData = function ({ id, title, description, release_date, directed_b
             .then((data) => {
                 resolve(data.rows)
             })
-            .catch((err) => reject(err))
+            .catch((err) => reject(err.message))
     })
 }
 
 // Delete Models Data
 models.deleteData = function ({ id }) {
     return new Promise(function (resolve, reject) {
-        db.query(`DELETE FROM movie WHERE id=${id}`)
+        db.query(`DELETE FROM movie WHERE movie_id=${id}`)
             .then((data) => {
                 resolve(data)
             })

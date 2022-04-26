@@ -13,7 +13,6 @@ const validateToken = (req, res, next) => {
             return respone(res, 401, err)
         }
         req.user = decode
-
         next()
     })
 }

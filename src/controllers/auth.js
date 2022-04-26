@@ -3,8 +3,9 @@ const response = require('../helpers/response')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-function genToken(email, role) {
+function genToken(id, email, role) {
     const payload = {
+        user_id: id,
         email: email,
         role: role,
     }
@@ -28,7 +29,7 @@ async function Login(req, res) {
         const check = await bcrypt.compare(password_user, password_db[0].password)
         const role = password_db[0].role
         if (check) {
-            const token = genToken(req.body.email, role)
+            const token = genToken(password_db[0].user_id, req.body.email, role)
             return response(res, 200, token)
         } else {
             return response(res, 401, 'Password anda salah')
