@@ -22,7 +22,11 @@ async function Login(req, res) {
     try {
         const password_db = await models.getByEmail(req.body.email)
         if (password_db.length <= 0) {
-            return response(res, 401, 'Email tidak ditemukan')
+            return response(res, 404, 'Email tidak ditemukan')
+        }
+
+        if (!password_db[0].verified) {
+            return response(res, 401, 'Please verification your email')
         }
 
         const password_user = req.body.password

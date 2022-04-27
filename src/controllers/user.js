@@ -48,6 +48,11 @@ users.Update = async (req, res) => {
 users.Delete = async (req, res) => {
     try {
         const id = req.params.id
+        const data = await models.getById(id)
+        fs.unlink(data[0].profile_image, function (err) {
+            if (err) throw err
+            console.log('File deleted!')
+        })
         await models.deleteData(id)
         return response(res, 200, 'Data berhasil di delete')
     } catch (error) {
