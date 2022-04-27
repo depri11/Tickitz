@@ -37,4 +37,33 @@ models.addData = function ({ first_name, last_name, phone_number, email, hashPas
     })
 }
 
+models.updateData = function ({ id, first_name, last_name, phone_number, email, hashPassword, profile_image }) {
+    return new Promise((resolve, reject) => {
+        db.query(`UPDATE public.users SET first_name=$1, last_name=$2, phone_number=$3, email=$4, "password"=$5, profile_image=$6, updated_at=now() WHERE user_id=${id}`, [
+            first_name,
+            last_name,
+            phone_number,
+            email,
+            hashPassword,
+            profile_image,
+        ])
+            .then(() => {
+                resolve('Data berhasil diupdate')
+            })
+            .catch((ers) => {
+                reject(ers.message)
+            })
+    })
+}
+
+models.deleteData = function (id) {
+    return new Promise(function (resolve, reject) {
+        db.query('DELETE FROM public.users WHERE user_id=$1', [id])
+            .then((data) => {
+                resolve(data.rows)
+            })
+            .catch((err) => reject(err))
+    })
+}
+
 module.exports = models

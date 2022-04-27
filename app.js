@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 1000
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(cors())
+app.use('/public', express.static('public'))
 app.use('/api/v1', route)
 
 db.connect()

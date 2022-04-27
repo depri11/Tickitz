@@ -27,9 +27,9 @@ async function Login(req, res) {
 
         const password_user = req.body.password
         const check = await bcrypt.compare(password_user, password_db[0].password)
-        const role = password_db[0].role
+        const { user_id, email, role } = password_db[0]
         if (check) {
-            const token = genToken(password_db[0].user_id, req.body.email, role)
+            const token = genToken(user_id, email, role)
             return response(res, 200, token)
         } else {
             return response(res, 401, 'Password anda salah')
