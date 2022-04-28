@@ -73,51 +73,48 @@ users.Create = async (req, res) => {
 }
 
 users.Update = async (req, res) => {
-    if (req.user.role === 'admin') {
-        try {
-            if (req.file !== undefined) {
-                profile_image = req.file.path
-            }
-            console.log(req.user.user_id)
-            const { id } = req.params
-            const data = await models.getById(id)
-            if (data.length === 0) {
-                return response(res, 404, 'Data not found')
-            }
+    try {
+        const id = req.params.id
+        const data = await models.getById(id)
+        if (data.length === 0) {
+            return response(res, 404, 'Data not found')
+        }
+        let profile_image = req.user.profile_image
+        if (req.file !== undefined) {
+            profile_image = req.file.path
+        }
+        if (req.user.role === 'admin' || req.user.user_id === data[0].user_id) {
             const { first_name, last_name, phone_number, email, password } = req.body
             const hashPassword = await hashPasswords(password)
             const result = await models.updateData({ first_name, last_name, phone_number, email, hashPassword, profile_image, id })
-
             return response(res, 200, result)
-        } catch (error) {
-            return response(res, 500, error)
+        } else {
+            return response(res, 403, 'Maaf akses ditolak')
         }
-    } else {
-        return response(res, 403, 'Maaf akses di tolak')
+    } catch (error) {
+        return response(res, 500, error)
     }
 }
 
 users.Delete = async (req, res) => {
-    if (req.user.role === 'admin') {
-        try {
-            const id = req.params.id
-            const data = await models.getById(id)
-            if (data.length === 0) {
-                return response(res, 404, 'Data not found')
-            }
-            if (req.user.user_id === data[0].user_id) {
-                fs.unlink(data[0].profile_image, function (err) {
-                    if (err) throw err
-                    console.log('File deleted!')
-                })
-                await models.deleteData(id)
-                return response(res, 200, 'Data berhasil di delete')
-            }
-        } catch (error) {
-            return response(res, 500, error)
+    try {
+        const id = req.params.id
+        const data = await models.getById(id)
+        if (data.length === 0) {
+            return response(res, 404, 'Data not found')
         }
-    } else {
-        return response(res, 403, 'Maaf anda bukan admin')
+        if (req.user.role === 'admin' || req.user.user_id === data[0].user_id) {
+            fs.unlink(data[0].profile_image, function (err) {
+                if (err) throw err
+                console.log('File deleted!')
+            })
+            await models.deleteData(id)
+            return response(res, 200, 'Data berhasil di delete')
+        } else {
+            return response(res, 403, 'Maaf akses ditolak')
+        }
+    } catch (error) {
+        return response(res, 500, error)
     }
 }
 
