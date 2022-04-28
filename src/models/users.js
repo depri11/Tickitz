@@ -77,7 +77,7 @@ models.deleteData = function (id) {
     return new Promise(function (resolve, reject) {
         db.query('DELETE FROM public.users WHERE user_id=$1', [id])
             .then((data) => {
-                resolve(data.rows)
+                resolve(data)
             })
             .catch((err) => reject(err))
     })
