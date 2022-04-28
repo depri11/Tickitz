@@ -100,7 +100,7 @@ users.Delete = async (req, res) => {
     try {
         const id = req.params.id
         const data = await models.getById(id)
-        if (data.length === 0) {
+        if (data.length < 1) {
             return response(res, 404, 'Data not found')
         }
         if (req.user.role === 'admin' || req.user.user_id === data[0].user_id) {

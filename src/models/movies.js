@@ -59,18 +59,18 @@ models.getData = function (id) {
 }
 
 // Create Models Data Movie
-models.addData = function ({ title, description, release_date, directed_by, duration, casts, images, category, price }) {
+models.addData = function ({ title, description, release_date, directed_by, duration, casts, category, price, images }) {
     return new Promise(function (resolve, reject) {
-        db.query('INSERT INTO movie (title, description,release_date,directed_by,duration,casts,images,category, price) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning *', [
+        db.query('INSERT INTO movie (title, description,release_date,directed_by,duration,casts,category, price,images) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning *', [
             title,
             description,
             release_date,
             directed_by,
             duration,
             casts,
-            images,
             category,
             price,
+            images,
         ])
             .then((data) => {
                 resolve(data.rows)
@@ -80,18 +80,18 @@ models.addData = function ({ title, description, release_date, directed_by, dura
 }
 
 // Update Models Data
-models.updateData = function ({ id, title, description, release_date, directed_by, duration, casts, images, category, price }) {
+models.updateData = function ({ id, title, description, release_date, directed_by, duration, casts, category, price, images }) {
     return new Promise(function (resolve, reject) {
-        db.query(`UPDATE public.movie SET title=$1, description=$2, release_date=$3, directed_by=$4, duration=$5, casts=$6, images=$7, category=$8, price=$9, updated_at=now() WHERE movie_id=${id} returning *`, [
+        db.query(`UPDATE public.movie SET title=$1, description=$2, release_date=$3, directed_by=$4, duration=$5, casts=$6, category=$7, price=$8, images=$9, updated_at=now() WHERE movie_id=${id} returning *`, [
             title,
             description,
             release_date,
             directed_by,
             duration,
             casts,
-            images,
             category,
             price,
+            images,
         ])
             .then((data) => {
                 resolve(data.rows)

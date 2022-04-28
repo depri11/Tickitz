@@ -45,14 +45,17 @@ movies.getMovie = async (req, res) => {
 movies.createData = async (req, res) => {
     if (req.user.role === 'admin') {
         try {
-            const { title, description, release_date, directed_by, duration, casts, images, category, price } = req.body
-            const data = await models.addData({ title, description, release_date, directed_by, duration, casts, images, category, price })
+            if (req.file !== undefined) {
+                images = req.file.path
+            }
+            const { title, description, release_date, directed_by, duration, casts, category, price } = req.body
+            const data = await models.addData({ title, description, release_date, directed_by, duration, casts, category, price, images })
             return response(res, 201, data)
         } catch (error) {
             return response(res, 500, error)
         }
     } else {
-        return response(res, 403, 'Maaf anda bukan admin')
+        return response(res, 403, 'Maaf akses di tolak')
     }
 }
 
@@ -60,9 +63,14 @@ movies.createData = async (req, res) => {
 movies.updateData = async (req, res) => {
     if (req.user.role === 'admin') {
         try {
+            if (req.file !== undefined) {
+                images = req.file.path
+            }
+
             const { id } = req.params
-            const { title, description, release_date, directed_by, duration, casts, images, price, category } = req.body
-            const data = await models.updateData({ id, title, description, release_date, directed_by, duration, casts, images, price, category })
+            const { title, description, release_date, directed_by, duration, casts, price, category } = req.body
+            const data = await models.updateData({ id, title, description, release_date, directed_by, duration, casts, price, category, images })
+
             if (!data.length) {
                 return response(res, 404, 'Data tidak ditemukan')
             } else {
@@ -72,7 +80,7 @@ movies.updateData = async (req, res) => {
             return response(res, 500, error)
         }
     } else {
-        return response(res, 403, 'Maaf anda bukan admin')
+        return response(res, 403, 'Maaf akses di tolak')
     }
 }
 
@@ -91,7 +99,7 @@ movies.deleteMovie = async (req, res) => {
             return response(res, 500, error)
         }
     } else {
-        return response(res, 403, 'Maaf anda bukan admin')
+        return response(res, 403, 'Maaf akses di tolak')
     }
 }
 

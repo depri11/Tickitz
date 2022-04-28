@@ -1,6 +1,4 @@
-const { status } = require('express/lib/response')
 const multer = require('multer')
-const response = require('../helpers/response')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
