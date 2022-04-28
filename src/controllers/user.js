@@ -2,6 +2,11 @@ const models = require('../models/users')
 const response = require('../helpers/response')
 const { hashPasswords } = require('../helpers/hash')
 const fs = require('fs')
+const sendMail = require('../utils/sendEmail')
+const crypto = require('crypto')
+const sign = require('jsonwebtoken/sign')
+const jwt = require('jsonwebtoken')
+const refreshTokens = require('./auth')
 const users = {}
 
 users.getAll = async (req, res) => {
@@ -11,6 +16,18 @@ users.getAll = async (req, res) => {
     } catch (error) {
         return response(res, 500, error)
     }
+}
+
+users.Verify = async (req, res) => {
+    try {
+        const id = req.params.id
+        const user = await models.getById(id)
+        if (!user) return response(res, 400, 'Invalid link')
+
+        const checkToken = req.params.token
+        const token = await models.Token(id, checkToken)
+        if (!token) return response(res, 400, 'Invalid link')
+    } catch (error) {}
 }
 
 users.Create = async (req, res) => {
@@ -23,6 +40,12 @@ users.Create = async (req, res) => {
         const { first_name, last_name, phone_number, email, password } = req.body
         const hashPassword = await hashPasswords(password)
         const data = await models.addData({ first_name, last_name, phone_number, email, hashPassword, profile_image })
+        // const userId = data[0].user_id
+        // const token = crypto.randomBytes(32).toString('hex')
+        // const createToken = await models.Token(userId, token)
+        // const url = `${process.env.BASE_URL}users/${userId}/verify/${createToken[0].token}`
+        // await sendMail(data[0].email, 'Verify Mail', url)
+        // return response(res, 200, 'An email sent to your account please verify')
         return response(res, 200, data)
     } catch (error) {
         return response(res, 500, error)

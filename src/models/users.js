@@ -15,9 +15,9 @@ models.getData = function () {
     })
 }
 
-models.getByEmail = function (email) {
+models.getByEmail = function (checkEmail) {
     return new Promise(function (resolve, reject) {
-        db.query('SELECT * FROM public.users WHERE email=$1', [email])
+        db.query('SELECT * FROM public.users WHERE email=$1', [checkEmail])
             .then((data) => {
                 resolve(data.rows)
             })
@@ -76,6 +76,16 @@ models.updateData = function ({ id, first_name, last_name, phone_number, email, 
 models.deleteData = function (id) {
     return new Promise(function (resolve, reject) {
         db.query('DELETE FROM public.users WHERE user_id=$1', [id])
+            .then((data) => {
+                resolve(data.rows)
+            })
+            .catch((err) => reject(err))
+    })
+}
+
+models.Token = function (userId, token) {
+    return new Promise(function (resolve, reject) {
+        db.query('INSERT INTO public.token (user_id, "token", created_at) VALUES($1, $2, now())', [userId, token])
             .then((data) => {
                 resolve(data.rows)
             })

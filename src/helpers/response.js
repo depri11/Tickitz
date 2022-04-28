@@ -23,6 +23,9 @@ function response(res, status, result = '', meta = '') {
         case 404:
             desc = 'Not Found'
             break
+        case 409:
+            desc = 'Conflict'
+            break
         case 500:
             desc = 'Internal Server Error'
             break

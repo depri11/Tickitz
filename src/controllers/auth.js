@@ -2,6 +2,8 @@ const models = require('../models/users')
 const response = require('../helpers/response')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const token = require('../models/refreshToken')
+const auth = {}
 
 function genToken(id, email, role) {
     const payload = {
@@ -10,15 +12,17 @@ function genToken(id, email, role) {
         role: role,
     }
 
-    const token = jwt.sign(payload, process.env.JWT_KEYS, { expiresIn: 3600 })
+    const accessToken = jwt.sign(payload, process.env.JWT_ACCESS, { expiresIn: '15s' })
+    const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH, { expiresIn: '15s' })
 
     return {
-        token,
+        accessToken,
+        refreshToken,
         message: 'Token berhasil dibuat',
     }
 }
 
-async function Login(req, res) {
+auth.Login = async (req, res) => {
     try {
         const password_db = await models.getByEmail(req.body.email)
         if (password_db.length <= 0) {
@@ -43,4 +47,18 @@ async function Login(req, res) {
     }
 }
 
-module.exports = Login
+auth.refreshToken = async (req, res) => {
+    try {
+        const refreshToken = req.body.token
+        if (!token) {
+            return response(res, 401, 'Silahkan login terlebih dahulu')
+        }
+        const newPayload = await token.verifyRefreshToken(refreshToken)
+        const newToken = genToken(newPayload)
+        return response(res, 200, newToken)
+    } catch (error) {
+        return response(res, 401, error)
+    }
+}
+
+module.exports = auth
