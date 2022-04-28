@@ -29,8 +29,8 @@ movies.getAll = async (req, res) => {
 // Get a Movie
 movies.getMovie = async (req, res) => {
     try {
-        const { id } = req.params
-        const data = await models.getData({ id })
+        const id = req.params.id
+        const data = await models.getData(id)
         if (!data.length) {
             return response(res, 404, 'Data tidak ditemukan')
         } else {

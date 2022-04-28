@@ -18,7 +18,7 @@ models.getAll = async ({ page, limit, order }) => {
         let query = format('SELECT * FROM movie')
 
         if (order) {
-            query = format(query + ' ORDER BY id %s', order)
+            query = format(query + ' ORDER BY movie_id %s', order)
         }
 
         if (page && limit) {
@@ -26,8 +26,13 @@ models.getAll = async ({ page, limit, order }) => {
             query = format(query + ' LIMIT %s OFFSET %s', limit, offset)
         }
 
-        const { rows } = await db.query('SELECT COUNT(id) as "count" FROM public.movie')
+        const { rows } = await db.query('SELECT COUNT(movie_id) as "count" FROM public.movie')
+        console.log(rows)
         const counts = rows[0].count
+
+        if (order === undefined) {
+            order = 'desc'
+        }
 
         const meta = {
             next: page == Math.ceil(counts / limit) ? null : `/api/v1/movies/all?order=${order}&page=${Number(page) + 1}&limit=${limit}`,
@@ -43,9 +48,9 @@ models.getAll = async ({ page, limit, order }) => {
 }
 
 // Get Models A Data Movie
-models.getData = function ({ id }) {
+models.getData = function (id) {
     return new Promise(function (resolve, reject) {
-        db.query(`SELECT * FROM movie WHERE id = ${id}`)
+        db.query(`SELECT * FROM movie WHERE movie_id = ${id}`)
             .then((data) => {
                 resolve(data.rows)
             })
