@@ -25,9 +25,16 @@ users.Verify = async (req, res) => {
         if (!user) return response(res, 400, 'Invalid link')
 
         const checkToken = req.params.token
-        const token = await models.Token(id, checkToken)
+        const userId = user[0].user_id
+        const token = await models.verifyToken(userId, checkToken)
         if (!token) return response(res, 400, 'Invalid link')
-    } catch (error) {}
+
+        await models.updateVerify(userId)
+        await models.deleteVerify(userId, checkToken)
+        return response(res, 200, 'Verifikasi email berhasil')
+    } catch (error) {
+        return response(res, 500, error)
+    }
 }
 
 users.Create = async (req, res) => {

@@ -83,9 +83,29 @@ models.deleteData = function (id) {
     })
 }
 
-models.Token = function (userId, token) {
+models.verifyToken = function (userId, checkToken) {
     return new Promise(function (resolve, reject) {
-        db.query('INSERT INTO public.token (user_id, "token", created_at) VALUES($1, $2, now())', [userId, token])
+        db.query('SELECT * FROM public.token Where (user_id=$1 and token=$2)', [userId, checkToken])
+            .then((data) => {
+                resolve(data.rows)
+            })
+            .catch((err) => reject(err))
+    })
+}
+
+models.updateVerify = function (userId) {
+    return new Promise(function (resolve, reject) {
+        db.query('UPDATE public.users SET verified=true WHERE user_id=$1', [userId])
+            .then((data) => {
+                resolve(data.rows)
+            })
+            .catch((err) => reject(err))
+    })
+}
+
+models.deleteVerify = function (userId, checkToken) {
+    return new Promise(function (resolve, reject) {
+        db.query('DELETE FROM public.token WHERE (user_id=$1 and token=$2)', [userId, checkToken])
             .then((data) => {
                 resolve(data.rows)
             })
