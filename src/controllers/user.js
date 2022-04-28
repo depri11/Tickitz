@@ -10,7 +10,8 @@ const refreshTokens = require('./auth')
 const users = {}
 
 users.getAll = async (req, res) => {
-    if (req.user.role === 'admin') {
+    console.log(req.user)
+    if (req.user.role === 'admin' || req.user.user_id.role === 'admin') {
         try {
             const data = await models.getData()
             return response(res, 200, data)
@@ -72,7 +73,7 @@ users.Create = async (req, res) => {
 }
 
 users.Update = async (req, res) => {
-    if (req.user.role === 'admin' || req.user.user_id == req.params.id) {
+    if (req.user.role === 'admin') {
         try {
             if (req.file !== undefined) {
                 profile_image = req.file.path

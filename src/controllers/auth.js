@@ -12,8 +12,8 @@ function genToken(id, email, role) {
         role: role,
     }
 
-    const accessToken = jwt.sign(payload, process.env.JWT_ACCESS, { expiresIn: '30d' })
-    const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH, { expiresIn: '30d' })
+    const accessToken = jwt.sign(payload, process.env.JWT_ACCESS, { expiresIn: '50d' })
+    const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH, { expiresIn: '1y' })
 
     return {
         accessToken,
@@ -50,12 +50,18 @@ auth.Login = async (req, res) => {
 auth.refreshToken = async (req, res) => {
     try {
         const refreshToken = req.body.token
-        if (!token) {
+        if (!refreshToken) {
             return response(res, 401, 'Silahkan login terlebih dahulu')
         }
-        const newPayload = await token.verifyRefreshToken(refreshToken)
-        const newToken = genToken(newPayload)
-        return response(res, 200, newToken)
+        const verifToken = await token.verifyRefreshToken(refreshToken)
+        const newPayload = {
+            user_id: verifToken.user_id,
+            email: verifToken.email,
+            role: verifToken.role,
+        }
+        const accToken = jwt.sign(newPayload, process.env.JWT_ACCESS, { expiresIn: '50d' })
+        // const refToken = jwt.sign(newPayload, process.env.JWT_REFRESH, { expiresIn: '1y' })
+        return response(res, 200, accToken)
     } catch (error) {
         return response(res, 401, error)
     }

@@ -1,7 +1,7 @@
 const express = require('express')
 const routers = express.Router()
-const validate = require('../middleware/validate')
 const controller = require('../controllers/user')
+const validate = require('../middleware/validate')
 const upload = require('../middleware/upload')
 
 routers.get('/', validate, controller.getAll)
