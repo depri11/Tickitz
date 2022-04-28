@@ -2,7 +2,7 @@ const models = require('../models/users')
 const response = require('../helpers/response')
 const { hashPasswords } = require('../helpers/hash')
 const fs = require('fs')
-const sendMail = require('../utils/sendEmail')
+const sendMail = require('../helpers/mail')
 const crypto = require('crypto')
 const sign = require('jsonwebtoken/sign')
 const jwt = require('jsonwebtoken')
@@ -47,13 +47,15 @@ users.Create = async (req, res) => {
         const { first_name, last_name, phone_number, email, password } = req.body
         const hashPassword = await hashPasswords(password)
         const data = await models.addData({ first_name, last_name, phone_number, email, hashPassword, profile_image })
-        // const userId = data[0].user_id
-        // const token = crypto.randomBytes(32).toString('hex')
-        // const createToken = await models.Token(userId, token)
-        // const url = `${process.env.BASE_URL}users/${userId}/verify/${createToken[0].token}`
-        // await sendMail(data[0].email, 'Verify Mail', url)
-        // return response(res, 200, 'An email sent to your account please verify')
-        return response(res, 200, data)
+
+        const userId = data[0].user_id
+        const token = crypto.randomBytes(32).toString('hex')
+        const createToken = await models.createToken(userId, token)
+
+        const userEmail = data[0].email
+        const url = `${process.env.BASE_URL}users/${userId}/verify/${createToken[0].token}`
+        await sendMail(userEmail, 'Verify Mail', url)
+        return response(res, 200, 'An email sent to your account please verify')
     } catch (error) {
         return response(res, 500, error)
     }

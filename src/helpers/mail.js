@@ -3,18 +3,15 @@ const nodemailer = require('nodemailer')
 module.exports = async (email, subject, text) => {
     try {
         const transporter = nodemailer.createTransport({
-            host: process.env.HOST,
-            service: process.env.SERVICE,
-            port: Number(process.env.EMAIL_PORT),
-            secure: Boolean(process.env.SECURE),
+            host: 'smtp.ethereal.email',
             auth: {
-                user: process.env.USER,
-                pass: process.env.PASSWORD,
+                user: 'dave.muller3@ethereal.email',
+                pass: 'WRcNJmVHAEuz97xNPy',
             },
         })
 
         await transporter.sendMail({
-            from: process.env.USER,
+            from: 'wirlandikadevri@gmail.com',
             to: email,
             subject: subject,
             text: text,

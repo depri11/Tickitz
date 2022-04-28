@@ -37,7 +37,7 @@ models.getById = function (id) {
 
 models.addData = function ({ first_name, last_name, phone_number, email, hashPassword, profile_image }) {
     return new Promise((resolve, reject) => {
-        db.query(`INSERT INTO public.users (first_name, last_name, phone_number, email, "password", profile_image, role, verified) VALUES($1, $2, $3, $4, $5, $6, 'user', '0')`, [
+        db.query(`INSERT INTO public.users (first_name, last_name, phone_number, email, "password", profile_image, role, verified) VALUES($1, $2, $3, $4, $5, $6, 'user', '0') returning *`, [
             first_name,
             last_name,
             phone_number,
@@ -45,8 +45,8 @@ models.addData = function ({ first_name, last_name, phone_number, email, hashPas
             hashPassword,
             profile_image,
         ])
-            .then(() => {
-                resolve('Data berhasil disimpan')
+            .then((data) => {
+                resolve(data.rows)
             })
             .catch((ers) => {
                 reject(ers.message)
@@ -76,6 +76,16 @@ models.updateData = function ({ id, first_name, last_name, phone_number, email, 
 models.deleteData = function (id) {
     return new Promise(function (resolve, reject) {
         db.query('DELETE FROM public.users WHERE user_id=$1', [id])
+            .then((data) => {
+                resolve(data.rows)
+            })
+            .catch((err) => reject(err))
+    })
+}
+
+models.createToken = function (userId, token) {
+    return new Promise(function (resolve, reject) {
+        db.query('INSERT INTO public."token" (user_id, "token", created_at)VALUES($1, $2, now()) returning token', [userId, token])
             .then((data) => {
                 resolve(data.rows)
             })
