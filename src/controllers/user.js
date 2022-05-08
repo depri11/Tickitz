@@ -10,16 +10,11 @@ const refreshTokens = require('./auth')
 const users = {}
 
 users.getAll = async (req, res) => {
-    console.log(req.user)
-    if (req.user.role === 'admin' || req.user.user_id.role === 'admin') {
-        try {
-            const data = await models.getData()
-            return response(res, 200, data)
-        } catch (error) {
-            return response(res, 500, error)
-        }
-    } else {
-        return response(res, 403, 'Maaf anda bukan admin')
+    try {
+        const data = await models.getData()
+        return response(res, 200, data)
+    } catch (error) {
+        return response(res, 500, error)
     }
 }
 
@@ -62,10 +57,10 @@ users.Create = async (req, res) => {
         const createToken = await models.createToken(userId, token)
 
         const userEmail = data[0].email
-        const url = `${process.env.BASE_URL}users/${userId}/verify/${createToken[0].token}`
+        const url = `${process.env.BASE_URL}/users/${userId}/verify/${createToken[0].token}`
+        // await sendMail(userEmail, 'Verify Mail', url)
         console.log(url)
 
-        // await sendMail(userEmail, 'Verify Mail', url)
         return response(res, 200, 'An email sent to your account please verify')
     } catch (error) {
         return response(res, 500, error)
@@ -79,17 +74,17 @@ users.Update = async (req, res) => {
         if (data.length === 0) {
             return response(res, 404, 'Data not found')
         }
-        let profile_image = req.user.profile_image
-        if (req.file !== undefined) {
-            profile_image = req.file.path
-        }
-        if (req.user.role === 'admin' || req.user.user_id === data[0].user_id) {
+        if (req.user.user_id == data[0].user_id || req.user.role == 'admin') {
+            let profile_image = req.user.profile_image
+            if (req.file !== undefined) {
+                profile_image = req.file.path
+            }
             const { first_name, last_name, phone_number, email, password } = req.body
             const hashPassword = await hashPasswords(password)
             const result = await models.updateData({ first_name, last_name, phone_number, email, hashPassword, profile_image, id })
             return response(res, 200, result)
         } else {
-            return response(res, 403, 'Maaf akses ditolak')
+            return response(res, 403, 'Your not permitted to access')
         }
     } catch (error) {
         return response(res, 500, error)
