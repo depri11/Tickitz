@@ -22,7 +22,6 @@ function genToken(id, email, role) {
 }
 
 auth.Login = async (req, res) => {
-    // eslint-disable-next-line no-useless-catch
     try {
         const password_db = await models.getByEmail(req.body.email)
         if (password_db.length <= 0) {
@@ -43,7 +42,7 @@ auth.Login = async (req, res) => {
             return response(res, 401, 'Password anda salah')
         }
     } catch (error) {
-        throw error
+        return response(res, 401, error)
     }
 }
 
