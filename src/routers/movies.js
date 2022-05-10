@@ -8,8 +8,8 @@ routers.get('/', controller.getData)
 routers.get('/all', controller.getAll)
 routers.get('/search', controller.getTitle)
 routers.get('/:id', controller.getMovie)
-routers.post('/', validate, upload.single('images'), controller.createData)
-routers.put('/:id', validate, upload.single('images'), controller.updateData)
-routers.delete('/:id', validate, controller.deleteMovie)
+routers.post('/', validate(['admin']), upload.single('images'), controller.createData)
+routers.put('/:id', validate(['admin']), upload.single('images'), controller.updateData)
+routers.delete('/:id', validate(['admin']), controller.deleteMovie)
 
 module.exports = routers
