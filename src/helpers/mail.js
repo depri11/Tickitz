@@ -1,17 +1,14 @@
 const nodemailer = require('nodemailer')
+const response = require('../helpers/response')
 
 module.exports = async (email, subject, text) => {
     try {
         const transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
+            host: 'smtp.ethereal.email',
             port: 587,
             auth: {
-                user: 'wirlandikadevri@gmail.com',
-                pass: 'WRcNJmVHAEuz97xNPy',
-            },
-            tls: {
-                ciphers: 'SSLv3',
-                rejectUnauthorized: false,
+                user: 'jamaal.treutel8@ethereal.email',
+                pass: '2YCKzp1afHYW3yP387',
             },
         })
 
@@ -21,9 +18,8 @@ module.exports = async (email, subject, text) => {
             subject: subject,
             text: text,
         })
-        console.log('Email sent Successfully')
+        return response(res, 200, 'Email sent successfully')
     } catch (error) {
-        console.log('Email not sent')
-        console.log(error)
+        return response(res, 400, error)
     }
 }

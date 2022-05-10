@@ -43,63 +43,53 @@ movies.getMovie = async (req, res) => {
 
 // Create a Movie
 movies.createData = async (req, res) => {
-    if (req.user.role === 'admin') {
-        try {
-            if (req.file !== undefined) {
-                images = req.file.path
-            }
-            const { title, description, release_date, directed_by, duration, casts, category, price } = req.body
-            const data = await models.addData({ title, description, release_date, directed_by, duration, casts, category, price, images })
-            return response(res, 201, data)
-        } catch (error) {
-            return response(res, 500, error)
+    try {
+        let images = null
+        if (req.file !== undefined) {
+            images = req.file.path
         }
-    } else {
-        return response(res, 403, 'Maaf akses di tolak')
+        const { title, description, release_date, directed_by, duration, casts, category, price } = req.body
+        const data = await models.addData({ title, description, release_date, directed_by, duration, casts, category, price, images })
+        return response(res, 201, data)
+    } catch (error) {
+        return response(res, 500, error)
     }
 }
 
 // Update a Movie
 movies.updateData = async (req, res) => {
-    if (req.user.role === 'admin') {
-        try {
-            if (req.file !== undefined) {
-                images = req.file.path
-            }
-
-            const { id } = req.params
-            const { title, description, release_date, directed_by, duration, casts, price, category } = req.body
-            const data = await models.updateData({ id, title, description, release_date, directed_by, duration, casts, price, category, images })
-
-            if (!data.length) {
-                return response(res, 404, 'Data tidak ditemukan')
-            } else {
-                return response(res, 200, data)
-            }
-        } catch (error) {
-            return response(res, 500, error)
+    try {
+        let images = null
+        if (req.file !== undefined) {
+            images = req.file.path
         }
-    } else {
-        return response(res, 403, 'Maaf akses di tolak')
+
+        const { id } = req.params
+        const { title, description, release_date, directed_by, duration, casts, price, category } = req.body
+        const data = await models.updateData({ id, title, description, release_date, directed_by, duration, casts, price, category, images })
+
+        if (!data.length) {
+            return response(res, 404, 'Data tidak ditemukan')
+        } else {
+            return response(res, 200, data)
+        }
+    } catch (error) {
+        return response(res, 500, error)
     }
 }
 
 // Delete a Movie
 movies.deleteMovie = async (req, res) => {
-    if (req.user.role === 'admin') {
-        try {
-            const { id } = req.params
-            const data = await models.deleteData({ id })
-            if (data.rowCount < 1) {
-                return response(res, 404, 'Data tidak ditemukan')
-            } else {
-                return response(res, 200, 'Data berhasil di Delete')
-            }
-        } catch (error) {
-            return response(res, 500, error)
+    try {
+        const { id } = req.params
+        const data = await models.deleteData({ id })
+        if (data.rowCount < 1) {
+            return response(res, 404, 'Data tidak ditemukan')
+        } else {
+            return response(res, 200, 'Data berhasil di Delete')
         }
-    } else {
-        return response(res, 403, 'Maaf akses di tolak')
+    } catch (error) {
+        return response(res, 500, error)
     }
 }
 

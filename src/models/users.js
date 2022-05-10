@@ -37,7 +37,7 @@ models.getById = function (id) {
 
 models.addData = function ({ first_name, last_name, phone_number, email, hashPassword, profile_image }) {
     return new Promise((resolve, reject) => {
-        db.query(`INSERT INTO public.users (first_name, last_name, phone_number, email, "password", profile_image, role, verified) VALUES($1, $2, $3, $4, $5, $6, 'user', '0') returning *`, [
+        db.query('INSERT INTO public.users (first_name, last_name, phone_number, email, "password", profile_image, role, verified) VALUES($1, $2, $3, $4, $5, $6, \'user\', \'0\') returning *', [
             first_name,
             last_name,
             phone_number,

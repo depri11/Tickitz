@@ -12,17 +12,17 @@ function genToken(id, email, role) {
         role: role,
     }
 
-    const accessToken = jwt.sign(payload, process.env.JWT_ACCESS, { expiresIn: '50d' })
+    const accessToken = jwt.sign(payload, process.env.JWT_ACCESS, { expiresIn: '15s' })
     const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH, { expiresIn: '1y' })
 
     return {
         accessToken,
         refreshToken,
-        message: 'Token berhasil dibuat',
     }
 }
 
 auth.Login = async (req, res) => {
+    // eslint-disable-next-line no-useless-catch
     try {
         const password_db = await models.getByEmail(req.body.email)
         if (password_db.length <= 0) {
