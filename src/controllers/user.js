@@ -8,7 +8,17 @@ const users = {}
 
 users.getData = async (req, res) => {
     try {
-        const data = await models.getUser()
+        const data = await models.getUsers()
+        return response(res, 200, data)
+    } catch (error) {
+        return response(res, 500, error)
+    }
+}
+
+users.getData = async (req, res) => {
+    try {
+        const id = req.params.id
+        const data = await models.getUser(id)
         return response(res, 200, data)
     } catch (error) {
         return response(res, 500, error)

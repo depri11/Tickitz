@@ -6,6 +6,7 @@ const upload = require('../middleware/upload')
 
 routers.get('/', validate(['admin']), controller.getData)
 routers.get('/all', controller.getAll)
+routers.get('/:id', controller.getUser)
 routers.get('/:id/verify/:token', controller.Verify)
 routers.post('/', upload.single('profile_image'), controller.Create)
 routers.put('/:id', validate(['admin', 'user']), upload.single('profile_image'), controller.Update)

@@ -2,9 +2,19 @@ const db = require('../configs/db')
 const format = require('pg-format')
 const models = {}
 
-models.getUser = function () {
+models.getUsers = function () {
     return new Promise(function (resolve, reject) {
         db.query('SELECT * FROM users')
+            .then((data) => {
+                resolve(data.rows)
+            })
+            .catch((err) => reject(err))
+    })
+}
+
+models.getUser = function (id) {
+    return new Promise(function (resolve, reject) {
+        db.query('SELECT * FROM public.users WHERE user_id=$1', [id])
             .then((data) => {
                 resolve(data.rows)
             })
