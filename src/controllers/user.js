@@ -6,9 +6,23 @@ const fs = require('fs')
 const crypto = require('crypto')
 const users = {}
 
+users.getData = async (req, res) => {
+    try {
+        const data = await models.getUser()
+        return response(res, 200, data)
+    } catch (error) {
+        return response(res, 500, error)
+    }
+}
+
 users.getAll = async (req, res) => {
     try {
-        const data = await models.getData()
+        const query = {
+            page: req.query.page || 1,
+            limit: req.query.limit || 5,
+            order: req.query.order,
+        }
+        const data = await models.getData(query)
         return response(res, 200, data)
     } catch (error) {
         return response(res, 500, error.message)

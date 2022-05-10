@@ -2,7 +2,7 @@ const db = require('../configs/db')
 const format = require('pg-format')
 const models = {}
 
-models.getMovie = async (req, res) => {
+models.getMovie = function () {
     return new Promise(function (resolve, reject) {
         db.query('SELECT * FROM movie')
             .then((data) => {
