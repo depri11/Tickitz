@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken')
-const response = require('../helpers/response')
 const models = {}
 
 models.verifyRefreshToken = (refreshToken) => {
